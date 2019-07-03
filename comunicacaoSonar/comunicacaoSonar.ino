@@ -25,6 +25,7 @@ void setup() {
 
 void loop() {
   int c = 0;
+  
   for (; c < NUM_SONARS; c++) {
   // Clears the trigPin
     digitalWrite(trigPin[c], LOW);
