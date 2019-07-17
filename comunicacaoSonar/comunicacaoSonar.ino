@@ -8,8 +8,9 @@
 #define NUM_SONARS 4
 
 // defines pins numbers
-const int trigPin[4] = {8,12,10,6};
-const int echoPin[4] = {9,13,11,7};
+// pinos usados para ligar os sensores ultrassônicos
+const int trigPin[4] = {6,7,8,9};
+const int echoPin[4] = {10,11,12,13};
 // defines variables
 long duration[4]= {0,0,0,0};
 int distance[4] = {0,0,0,0};
