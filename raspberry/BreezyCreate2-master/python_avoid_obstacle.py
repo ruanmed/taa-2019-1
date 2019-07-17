@@ -85,7 +85,7 @@ sensor_val=np.array([]) #empty array for sensor measurements
 # sensor_loc=np.array([-PI/2, -PI/4, PI/4, PI/2) 
 # 0 = -75, 1 = -30, 3 = 30, 2 = 75
  
-sensor_loc=np.array([-75*PI/180, -30*PI/180, 30*PI/180, 75*PI/180]) 
+sensor_loc=np.array([60*PI/180, 15*PI/180, -15*PI/180, -75*PI/180]) 
 
 #for loop to retrieve sensor arrays and initiate sensors
 # for x in range(1,16+1):
@@ -118,12 +118,12 @@ while (time.time()-t)<60:
     print(min_ind[0])
     min_ind=min_ind[0][0]
 #    print("HMM-> [0] ", sensor_sq[0])
-    if sensor_val[min_ind]< (6*6):
+    if sensor_val[min_ind]< (5*5):
         steer=-1/sensor_loc[min_ind]
-        bot.setForwardSpeed(0)
-        bot.setTurnSpeed(100*steer)
-        time.sleep(0.1)
-        bot.setForwardSpeed(-50)
+        # bot.setForwardSpeed(0)
+        # bot.setTurnSpeed(100*steer)
+        # time.sleep(0.1)
+        # bot.setForwardSpeed(-50)
     else:
         steer=0
             
@@ -135,6 +135,10 @@ while (time.time()-t)<60:
     print("V_l =",vl)
     print("V_r =",vr)
 
+    vl = vl * 255/3.0
+    vr = vr * 255/3.0
+
+    bot.setWheelPWM(vr, vl)
     # errorCode=vrep.simxSetJointTargetVelocity(clientID,left_motor_handle,vl, vrep.simx_opmode_streaming)
     # errorCode=vrep.simxSetJointTargetVelocity(clientID,right_motor_handle,vr, vrep.simx_opmode_streaming)
     

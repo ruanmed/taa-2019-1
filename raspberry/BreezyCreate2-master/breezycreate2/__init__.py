@@ -62,6 +62,14 @@ class Robot(object):
         '''
         self.robot.drive_straight(speed)
 
+    def setWheelPWM(self, right_pwm, left_pwm):
+        '''
+        Sets the robot's forward speed.  
+        Speeds must be between -500 and +500.
+        Use negative for reverse.
+        '''
+        self.robot.drive_straight(speed)
+
     def setTurnSpeed(self, speed):
         '''
         Sets the robot's right turn speed.  
@@ -409,10 +417,53 @@ class _Create2(object):
         """
         #self.SCI.send(self.config.data['opcodes']['start'],0)
     
-    def drive_pwm(self):
-        """Not implementing this for now.
+    def drive_pwm(self, right_wheel_pwm, left_wheel_pwm):
+        """Controls the Create 2's drive wheels individually raw forward and backward by PWM.
+        
+            Args:
+                right_wheel_pwm: A number between -255 and 255.
+                left_wheel_pwm: A number between -255 and 255.
+
+                A positive PWM makes that wheel drive forward, while a negative PWM makes it drive backward. 
         """
-        #self.SCI.send(self.config.data['opcodes']['start'],0)
+        noError = True
+        data = []
+        r_pwm = None
+        l_pwm = None
+
+        #Check to make sure we are getting sent valid velocity/radius.
+        
+
+        if (right_wheel_pwm >= -255 and right_wheel_pwm <= 255):
+            r_pwm = int(r_pwm) & 0xffff
+            #Convert 16bit raw PWM value to Hex
+        else:
+            noError = False
+            raise _ROIDataByteError("Invalid Right Wheel PWM input")
+        
+        if (left_wheel_pwm >= -255 and left_wheel_pwm <= 255):
+            l_pwm = int(l_pwm) & 0xffff
+            #Convert 16bit raw PWM value to Hex
+        else:
+            noError = False
+            raise _ROIDataByteError("Invalid Left Wheel PWM input")
+
+        if noError:
+            data = struct.unpack('4B', struct.pack('>2H', r_pwm, l_pwm))
+            #An example of what data looks like:
+            #print data >> (255, 56, 1, 244)
+            
+            #data[0] = Right PWM high byte
+            #data[1] = Right PWM low byte
+            #data[2] = Left PWM high byte
+            #data[3] = Left PWM low byte
+            
+            #Normally we would convert data to a tuple before sending it to SCI
+            #   But struct.unpack already returns a tuple.
+            
+            self.SCI.send(self.config.data['opcodes']['drive_pwm'], data)
+        else:
+            raise _ROIFailedToSendError("Invalid data, failed to send")
     
     def motors(self):
         """Not implementing this for now.
