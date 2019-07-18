@@ -68,7 +68,7 @@ class Robot(object):
         Speeds must be between -500 and +500.
         Use negative for reverse.
         '''
-        self.robot.drive_straight(speed)
+        self.robot.drive_pwm(right_pwm, left_pwm)
 
     def setTurnSpeed(self, speed):
         '''
