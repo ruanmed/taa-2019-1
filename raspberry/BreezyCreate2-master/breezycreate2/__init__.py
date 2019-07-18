@@ -435,14 +435,14 @@ class _Create2(object):
         
 
         if (right_wheel_pwm >= -255 and right_wheel_pwm <= 255):
-            r_pwm = int(r_pwm) & 0xffff
+            r_pwm = int(right_wheel_pwm) & 0xffff
             #Convert 16bit raw PWM value to Hex
         else:
             noError = False
             raise _ROIDataByteError("Invalid Right Wheel PWM input")
         
         if (left_wheel_pwm >= -255 and left_wheel_pwm <= 255):
-            l_pwm = int(l_pwm) & 0xffff
+            l_pwm = int(left_wheel_pwm) & 0xffff
             #Convert 16bit raw PWM value to Hex
         else:
             noError = False
