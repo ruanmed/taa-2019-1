@@ -48,7 +48,7 @@ time.sleep(0.1)
 # 0 = -75, 1 = -30, 3 = 30, 2 = 75
 #orientation of all the sensors: 
 # sensor_loc=np.array([60*PI/180, 15*PI/180, -15*PI/180, -75*PI/180])
-sensor_loc=np.array([-75*PI/180, -15*PI/180, 15*PI/180, 60*PI/180]) 
+sensor_loc=[-75*PI/180, -15*PI/180, 15*PI/180, 60*PI/180]
 
 t = time.time()
 
