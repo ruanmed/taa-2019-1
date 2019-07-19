@@ -18,19 +18,19 @@ import time
 import serial
 import re
 
+print_stuff = False
+
 ser = serial.Serial('/dev/ttyUSB1', 9600)
 #ser.write('5')
 #ser.write(b'5') #Prefixo b necessario se estiver utilizando Python 3.X
 #ser.read()
-
+re_compiled = re.compile('[0-9]+')
 def read_sonar():
         S = [None,None,None,None]
-
         while (S[0] == None or S[1] == None or S[2] == None or S[3] == None):
                 V_SERIAL = ser.readline()
-                valores = re.findall('[0-9]+', str(V_SERIAL))
+                valores = re_compiled.findall(str(V_SERIAL))
                 S[int(valores[0])] = int(valores[1])
-
         return S
 
 # while(True):
@@ -59,7 +59,7 @@ bot = Robot()
 bot.playNote('A4', 100)
 
 bot.setForwardSpeed(-50) 
-
+time.sleep(0.1)
 # vrep.simxFinish(-1) # just in case, close all opened connections
 
 # clientID=vrep.simxStart('127.0.0.1',19999,True,True,5000,5)
@@ -85,7 +85,8 @@ sensor_val=np.array([]) #empty array for sensor measurements
 # sensor_loc=np.array([-PI/2, -PI/4, PI/4, PI/2) 
 # 0 = -75, 1 = -30, 3 = 30, 2 = 75
  
-sensor_loc=np.array([60*PI/180, 15*PI/180, -15*PI/180, -75*PI/180]) 
+# sensor_loc=np.array([60*PI/180, 15*PI/180, -15*PI/180, -75*PI/180])
+sensor_loc=np.array([-75*PI/180, -15*PI/180, 15*PI/180, 60*PI/180]) 
 
 #for loop to retrieve sensor arrays and initiate sensors
 # for x in range(1,16+1):
@@ -102,7 +103,7 @@ while (time.time()-t)<60:
     #Loop Execution
     sensor_val=np.array([])
     sensor_val=read_sonar()
-    print(sensor_val) 
+    print(sensor_val)
     # for x in range(1,16+1):
         # errorCode,detectionState,detectedPoint,detectedObjectHandle,detectedSurfaceNormalVector=vrep.simxReadProximitySensor(clientID,sensor_h[x-1],vrep.simx_opmode_buffer)                
         # sensor_val=np.append(sensor_val,np.linalg.norm(detectedPoint)) #get list of values
@@ -114,9 +115,10 @@ while (time.time()-t)<60:
 #    sensor_sq=sensor_val[0:4]*sensor_val[0:4] #square the values of front-facing sensors 1-8
     sensor_sq=np.array([])
         
-    min_ind=np.where(sensor_val==np.min(sensor_val))
-    print(min_ind[0])
-    min_ind=min_ind[0][0]
+    min_ind=sensor_val.index(min(sensor_val))
+    # min_ind=np.where(sensor_val==np.min(sensor_val))
+    # print(min_ind[0])
+    # min_ind=min_ind[0][0]
 #    print("HMM-> [0] ", sensor_sq[0])
     if sensor_val[min_ind]< (5*5):
         steer=-1/sensor_loc[min_ind]
@@ -135,8 +137,9 @@ while (time.time()-t)<60:
     print("V_l =",vl)
     print("V_r =",vr)
 
-    vl = vl * 255/3.0
-    vr = vr * 255/3.0
+    velo = -200/3.0
+    vl = vl * velo
+    vr = vr * velo
 
     bot.setWheelPWM(vr, vl)
     # errorCode=vrep.simxSetJointTargetVelocity(clientID,left_motor_handle,vl, vrep.simx_opmode_streaming)

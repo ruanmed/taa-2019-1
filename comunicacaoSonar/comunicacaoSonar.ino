@@ -45,5 +45,7 @@ void loop() {
     Serial.print("]: "); 
     Serial.println(distance[c]);
   }
-  delay(1500);
+  // https://cdn.sparkfun.com/datasheets/Sensors/Proximity/HCSR04.pdf
+  // Recomendado 100ms de tempo de leitura
+  delay(100);
 }
